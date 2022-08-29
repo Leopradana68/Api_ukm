@@ -3,98 +3,143 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function login(Request $request){
-    	$validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        if (! $token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-        return $this->createNewToken($token);
-    }
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register(Request $request) {
+
+        // Validiasi data yang diberikan oleh frontend
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
+            'email' => ['required', 'string', 'max:100', 'min:6'],
+            'password' => ['required', 'string', 'max:255', 'min:6'],
         ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+
+        // Jika data yang di validasi tidak sesuai maka berikan response error 422
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors(),
+                '__message' => 'Tidak berhasil login, data yang diberikan tidak valid',
+                '__func' => 'AUTH Login',
+            ], 422);
         }
-        $user = User::create(array_merge(
-                    $validator->validated(),
-                    ['password' => bcrypt($request->password)]
-                ));
+
+        // Cek jika email user tersedia di tabel
+        if (User::where('email', $request->email)->exists()) {
+
+            // Eksekusi query mengambil data user
+            $data = User::where('email', $request->email)->first();
+
+            // Cek password yang dikirim apakah sesuai dengan yang ada di tabel
+            if (!Hash::check($request->password, $data->password)) {
+
+                return response()->json([
+                    'data' => 'Password: ' . $data->password,
+                    '__message' => 'Tidak berhasil login, password tidak cocok',
+                    '__func' => 'AUTH Login',
+                ], 422);
+
+            }
+
+            if ($data) {
+                // Membuat bearer token sanctum untuk authentikasi
+                $tokenResult = $data->createToken('authToken')->plainTextToken;
+
+                // Jika berhasil maka kembalikan response error
+                return response()->json([
+                    'token' => $tokenResult,
+                    'token_type' => 'Bearer',
+                    'data' => $data,
+                    '__message' => 'Berhasil login',
+                    '__func' => 'AUTH Login',
+                ], 200);
+            }
+
+            // Jika gagal seperti masalah koneksi atau apapun maka berikan response error
+            return response()->json([
+                'data' => $data,
+                '__message' => 'Terdapat kesalahan saat login, coba kembali beberapa saat',
+                '__func' => 'AUTH login',
+            ], 500);
+
+        } else {
+
+            // Jika user tidak ditemukan maka kembalikan response error
+            return response()->json([
+                'data' => 'Email: ' . $request->email,
+                '__message' => 'Tidak berhasil login, pengguna tidak ditemukan',
+                '__func' => 'AUTH Login',
+            ], 500);
+        }
+    }
+    
+    public function register(Request $request) {
+        
+        // Validiasi data yang diberikan oleh frontend
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:200', 'min:3'],
+            'email' => ['required', 'email', 'max:100', 'min:6'],
+            'password' => ['required', 'string', 'max:255', 'min:6'],
+        ]);
+
+        // Jika data yang di validasi tidak sesuai maka berikan response error 422
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors(),
+                '__message' => 'Tidak berhasil mendaftar, data yang diberikan tidak valid',
+                '__func' => 'AUTH register',
+            ], 422);
+        }
+
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'data' => 'Email: ' . $request->email,
+                '__message' => 'Tidak berhasil mendaftar, user dengan email yang diberikan sudah terdaftar',
+                '__func' => 'AUTH register',
+            ], 422);
+        }
+
+        // Eksekusi pembuatan data user baru
+        $query = User::create([
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password)
+        ]);
+
+        // Jika eksekusi query berhasil maka berikan response success
+        if ($query) {
+            return response()->json([
+                'data' => $query,
+                '__message' => 'User berhasil dibuat',
+                '__func' => 'AUTH register',
+            ], 200);
+        }
+
+        // Jika gagal seperti masalah koneksi atau apapun maka berikan response error
         return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+            'data' => $query,
+            '__message' => 'User tidak berhasil dibuat, coba kembali beberapa saat',
+            '__func' => 'AUTH register',
+        ], 500);
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout() {
         auth()->logout();
         return response()->json(['message' => 'User successfully signed out']);
     }
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh() {
-        return $this->createNewToken(auth()->refresh());
-    }
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function userProfile() {
         return response()->json(auth()->user());
     }
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function createNewToken($token){
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
-    }
+
+    // protected function createNewToken($token){
+    //     return response()->json([
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => auth()->factory()->getTTL() * 60,
+    //         'user' => auth()->user()
+    //     ]);
+    // }
 }

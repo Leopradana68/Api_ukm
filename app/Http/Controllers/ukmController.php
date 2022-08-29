@@ -24,6 +24,11 @@ use Illuminate\Support\Facades\Validator;
 
 class UkmController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | LIST
+    |--------------------------------------------------------------------------
+    */
     public function list()
     {
         // Jika tabel UKM gak ada isi maka 
@@ -44,11 +49,16 @@ class UkmController extends Controller
         ], 200);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
     public function create(Request $request)
     {
         // Validiasi data yang diberikan oleh frontend
         $validator = Validator::make($request->all(), [
-            'nama_ukm' => ['required', 'string', 'min:3'],
+            'nama' => ['required', 'string', 'min:3'],
             'jenis' => ['required', 'string'],
             'singkatan_ukm' => ['required', 'string', 'min:1'],
             'foto_ukm' => ['required', 'mimes:jpg,png,jpeg'],
@@ -74,7 +84,7 @@ class UkmController extends Controller
 
         // Eksekusi pembuatan data ukm
         $query = Ukm::create([
-            'nama_ukm' => $request->nama_ukm,
+            'nama' => $request->nama,
             'jenis' => $request->jenis,
             'singkatan_ukm' => $request->singkatan_ukm,
             'foto_ukm' => $nama_file,
@@ -98,14 +108,19 @@ class UkmController extends Controller
         ], 500);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
     public function update(Request $request, $id_ukm)
     {
         // Validiasi data yang diberikan oleh frontend
         $validator = Validator::make($request->all(), [
-            'nama_ukm' => ['required', 'string', 'min:3'],
-            'jenis' => ['required', 'string'],
-            'singkatan_ukm' => ['required', 'string', 'min:1'],
-            'foto_ukm' => ['required', 'mimes:jpg,png,jpeg'],
+            'nama' => ['string', 'min:3'],
+            'jenis' => ['string'],
+            'singkatan_ukm' => ['string', 'min:1'],
+            'foto_ukm' => ['mimes:jpg,png,jpeg'],
             'keterangan' => ['string'],
         ]);
 
@@ -119,7 +134,7 @@ class UkmController extends Controller
         }
 
         // Cek jika ID Ukm yang diberikan merupakan Integer
-        if (!is_int($id_ukm)){
+        if (!is_numeric($id_ukm)){
             return response()->json([
                 'data' => 'ID Ukm: ' . $id_ukm,
                 '__message' => 'UKM tidak berhasil diperbarui, ID UKM harus berupa Integer',
@@ -138,7 +153,7 @@ class UkmController extends Controller
 
                 // Eksekusi pembaruan data ukm
                 $query = Ukm::where('id', $id_ukm)->update([
-                    'nama_ukm' => $request->nama_ukm,
+                    'nama' => $request->nama,
                     'jenis' => $request->jenis,
                     'singkatan_ukm' => $request->singkatan_ukm,
                     'foto_ukm' => $nama_file,
@@ -148,7 +163,7 @@ class UkmController extends Controller
 
                  // Eksekusi pembaruan data ukm tanpa "foto ketua"
                  $query = Ukm::where('id', $id_ukm)->update([
-                    'nama_ukm' => $request->nama_ukm,
+                    'nama' => $request->nama,
                     'jenis' => $request->jenis,
                     'singkatan_ukm' => $request->singkatan_ukm,
                     'keterangan' => $request->keterangan
@@ -180,10 +195,15 @@ class UkmController extends Controller
         ], 500);
     }
     
+    /*
+    |--------------------------------------------------------------------------
+    | DETAIL
+    |--------------------------------------------------------------------------
+    */
     public function detail($id_ukm)
     {
         // Cek jika ID Ukm yang diberikan merupakan Integer
-        if (!is_int($id_ukm)){
+        if (!is_numeric($id_ukm)){
             return response()->json([
                 'data' => 'ID Ukm: ' . $id_ukm,
                 '__message' => 'UKM tidak berhasil diambil, ID UKM harus berupa Integer',
@@ -222,10 +242,15 @@ class UkmController extends Controller
         ], 500);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE
+    |--------------------------------------------------------------------------
+    */
     public function delete($id_ukm)
     {
         // Cek jika ID Ukm yang diberikan merupakan Integer
-        if (!is_int($id_ukm)){
+        if (!is_numeric($id_ukm)){
             return response()->json([
                 'data' => 'ID Ukm: ' . $id_ukm,
                 '__message' => 'UKM tidak berhasil dihapus, ID UKM harus berupa Integer',

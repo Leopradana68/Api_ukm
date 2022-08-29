@@ -18,13 +18,22 @@ use App\Http\Controllers\UkmController;
 |
 */
 
-Route::prefix('ukm')->group(function () {
-    Route::get('/list', [UkmController::class, 'list']); // Daftar UKM
-    Route::get('/detail/{id_ukm}', [UkmController::class, 'detail']); // Detail Data UKM
-    Route::patch('/{id_ukm}', [UkmController::class, 'update']); // Memperbarui UKM
-    Route::post('/{id_ukm}', [UkmController::class, 'create']); // Membuat data UKM baru
-    Route::delete('/{id_ukm}', [UkmController::class, 'delete']); // Menghapus data UKM
+Route::post('/login', [AuthController::class, 'login']); // Login User
+Route::post('/register', [AuthController::class, 'register']); // Membuat data User baru
+
+Route::group(['middleware' => 'auth:sanctum'], function () {
+
+    Route::prefix('ukm')->group(function () {
+        Route::get('/', [UkmController::class, 'list']); // Daftar UKM
+        Route::get('/{id_ukm}', [UkmController::class, 'detail']); // Detail Data UKM
+        Route::patch('/{id_ukm}', [UkmController::class, 'update']); // Memperbarui UKM
+        Route::post('/{id_ukm}', [UkmController::class, 'create']); // Membuat data UKM baru
+        Route::delete('/{id_ukm}', [UkmController::class, 'delete']); // Menghapus data UKM
+    });
+    
 });
+
+
 
 // Route::get('/ukm', [ukmController::class, 'index']);
 // Route::post('/ukm', [ukmController::class, 'store']);
