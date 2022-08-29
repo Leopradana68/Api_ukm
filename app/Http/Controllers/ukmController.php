@@ -2,190 +2,265 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ukm;
+use App\Models\Ukm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel UKM
+|--------------------------------------------------------------------------
+|
+| UkmController digunakan untuk mengelola tabel UKM. Dapat diakses dalam
+| router grup "/ukm".
+|
+| - LIST - Menampilkan daftar UKM
+| - DETAIL - Menampilkan detail data UKM
+| - CREATE - Membuat data UKM baru
+| - UPDATE - Memperbarui data UKM
+| - DELETE - Menghapus data UKM
+|
+*/
 
-class ukmController extends Controller
+class UkmController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function list()
     {
-        
-         $data = ukm::latest()->get();
-        return response([
-            'success' => true,
-            'message' => 'List Semua Ukm',
-            'data' => $data
-        ],200);
-    
-        // $data = ukm ::all();
-        // return response()->json($data);
+        // Jika tabel UKM gak ada isi maka 
+        if (Ukm::count() > 0) {
+            $data = Ukm::get();
 
-
-        // dd ('halo controller');
-   
-    } 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Recquest $request)
-    {
-        ukm::create($request->all());
-        return response()->json(' Data sudah di masukan' );
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-        $request->validate(([
-            'nama_ukm' => 'required|max:191',
-            'jenis'=> 'required|max:191',
-            'singkatan_ukm'=> 'required|max:191',
-            'nama_ketua'=> 'required|max:191',
-            'nama_wakil_ketua'=> 'required|max:191',
-            'nama_sekertaris'=> 'required|max:191',
-            'keterangan' => 'required|max:191',
-           
-
-         
-        ]));
-
-        $ukm = new ukm();
-        $ukm->nama_ukm= $request->get('nama_ukm');
-        $ukm->jenis = $request->get('jenis');
-        $ukm->singkatan_ukm = $request->get('singkatan_ukm');
-        $ukm->nama_ketua= $request->get('nama_ketua');
-        $ukm->nama_wakil_ketua= $request->get('nama_wakil_ketua');
-        $ukm->nama_sekertaris= $request->get('nama_sekertaris');
-        $ukm->keterangan= $request->get('keterangan');
-        $ukm = $ukm->save();
-        if ($ukm) {
             return response()->json([
-                'status' => '200',
-                'student' => "ukm berhasil di simpan !"
-            ]);
-        } else {
-            return response()->json([
-                'status' => '404',
-                'student' => "ukm gagal di simpan !"
-            ]);
+                'data' => $data,
+                '__message' => 'Daftar UKM berhasil diambil',
+                '__func' => 'UKM List',
+            ], 200);
         }
-    }
-    
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+        return response()->json([
+            'data' => 'Ukm tidak ditemukan',
+            '__message' => 'Daftar UKM berhasil diambil',
+            '__func' => 'UKM List',
+        ], 200);
+    }
+
+    public function create(Request $request)
     {
-        $ukm = ukm::find($id);
-        // $student = Student::select('id', 'name', 'course', 'email', 'phone')->get();
-        if ($ukm) {
-            return  response()->json([
-                'status' => '200',
-                'student' => $ukm
-            ]);
-        } else {
+        // Validiasi data yang diberikan oleh frontend
+        $validator = Validator::make($request->all(), [
+            'nama_ukm' => ['required', 'string', 'min:3'],
+            'jenis' => ['required', 'string'],
+            'singkatan_ukm' => ['required', 'string', 'min:1'],
+            'foto_ukm' => ['required', 'mimes:jpg,png,jpeg'],
+            'keterangan' => ['string'],
+        ]);
+
+        // Jika data yang di validasi tidak sesuai maka berikan response error 422
+        if ($validator->fails()) {
             return response()->json([
-                'status' => '404',
-                'student' => "Data Not Found....."
-            ]);
+                'data' => $validator->errors(),
+                '__message' => 'UKM tidak berhasil dibuat, data yang diberikan tidak valid',
+                '__func' => 'UKM create',
+            ], 422);
         }
-       
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        // Cek jika variabel "$request->foto_ukm" merupakan sebuah file
+        if ($request->hasFile('foto_ukm')) {
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate(([
-            'nama_ukm' => 'required|max:191',
-            'jenis'=> 'required|max:191',
-            'singkatan_ukm'=> 'required|max:191',
-            'nama_ketua'=> 'required|max:191',
-            'nama_wakil_ketua'=> 'required|max:191',
-            'nama_sekertaris'=> 'required|max:191',
-            'keterangan' => 'required|max:191',
-        ]));
+            // Upload file gambar kedalam folder public dan kembalikan nama file 
+            $nama_file = $this->uploadFile($request->foto_ukm);
 
-        $ukm = ukm::find($id);
-        $ukm->nama_ukm= $request->get('nama_ukm');
-        $ukm->jenis = $request->get('jenis');
-        $ukm->singkatan_ukm = $request->get('singkatan_ukm');
-        $ukm->nama_ketua= $request->get('nama_ketua');
-        $ukm->nama_wakil_ketua= $request->get('nama_wakil_ketua');
-        $ukm->nama_sekertaris= $request->get('nama_sekertaris');
-        $ukm->keterangan= $request->get('keterangan');
-        $ukm = $ukm->save();
-        if ($ukm) {
-            return response()->json([
-                'status' => '200',
-                'student' => "Data Updated Sucessfully..."
-            ]);
-        } else {
-            return response()->json([
-                'status' => '404',
-                'student' => "error in updating data..."
-            ]);
         }
+
+        // Eksekusi pembuatan data ukm
+        $query = Ukm::create([
+            'nama_ukm' => $request->nama_ukm,
+            'jenis' => $request->jenis,
+            'singkatan_ukm' => $request->singkatan_ukm,
+            'foto_ukm' => $nama_file,
+            'keterangan' => $request->keterangan
+        ]);
+
+        // Jika eksekusi query berhasil maka berikan response success
+        if ($query) {
+            return response()->json([
+                'data' => $query,
+                '__message' => 'UKM berhasil dibuat',
+                '__func' => 'UKM create',
+            ], 200);
+        }
+
+        // Jika gagal seperti masalah koneksi atau apapun maka berikan response error
+        return response()->json([
+            'data' => $query,
+            '__message' => 'UKM tidak berhasil dibuat, coba kembali beberapa saat',
+            '__func' => 'UKM create',
+        ], 500);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function delete($id)
+    public function update(Request $request, $id_ukm)
     {
+        // Validiasi data yang diberikan oleh frontend
+        $validator = Validator::make($request->all(), [
+            'nama_ukm' => ['required', 'string', 'min:3'],
+            'jenis' => ['required', 'string'],
+            'singkatan_ukm' => ['required', 'string', 'min:1'],
+            'foto_ukm' => ['required', 'mimes:jpg,png,jpeg'],
+            'keterangan' => ['string'],
+        ]);
 
-        {
-            $ukm = ukm::find($id);
-            if ($ukm) {
-                $ukm->delete();
-                return  response()->json([
-                    'status' => '200',
-                    'student' => "Data Deleted Successfully....."
+        // Jika data yang di validasi tidak sesuai maka berikan response error 422
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => $validator->errors(),
+                '__message' => 'UKM tidak berhasil diperbarui, data yang diberikan tidak valid',
+                '__func' => 'UKM update',
+            ], 422);
+        }
+
+        // Cek jika ID Ukm yang diberikan merupakan Integer
+        if (!is_int($id_ukm)){
+            return response()->json([
+                'data' => 'ID Ukm: ' . $id_ukm,
+                '__message' => 'UKM tidak berhasil diperbarui, ID UKM harus berupa Integer',
+                '__func' => 'UKM update',
+            ], 422);
+        }
+
+        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        if (Ukm::where('id', $id_ukm)->exists()) {
+
+            // Cek jika variabel "$request->foto_ukm" merupakan sebuah file
+            if ($request->hasFile('foto_ukm')) {
+
+                // Upload file gambar kedalam folder public dan kembalikan nama file 
+                $nama_file = $this->uploadFile($request->foto_ukm);
+
+                // Eksekusi pembaruan data ukm
+                $query = Ukm::where('id', $id_ukm)->update([
+                    'nama_ukm' => $request->nama_ukm,
+                    'jenis' => $request->jenis,
+                    'singkatan_ukm' => $request->singkatan_ukm,
+                    'foto_ukm' => $nama_file,
+                    'keterangan' => $request->keterangan
                 ]);
             } else {
-                return response()->json([
-                    'status' => '404',
-                    'student' => "Data Not Found....."
+
+                 // Eksekusi pembaruan data ukm tanpa "foto ketua"
+                 $query = Ukm::where('id', $id_ukm)->update([
+                    'nama_ukm' => $request->nama_ukm,
+                    'jenis' => $request->jenis,
+                    'singkatan_ukm' => $request->singkatan_ukm,
+                    'keterangan' => $request->keterangan
                 ]);
             }
+    
+            // Jika eksekusi query berhasil maka berikan response success
+            if ($query) {
+                return response()->json([
+                    'data' => $query,
+                    '__message' => 'UKM berhasil diperbarui',
+                    '__func' => 'UKM update',
+                ], 200);
+            }
+    
+            // Jika gagal seperti masalah koneksi atau apapun maka berikan response error
+            return response()->json([
+                'data' => $query,
+                '__message' => 'UKM tidak berhasil diperbarui, coba kembali beberapa saat',
+                '__func' => 'UKM update',
+            ], 500);
         }
+
+        // Jika ID tidak tersedia maka tampilkan response error
+        return response()->json([
+            'data' => 'ID Ukm: ' . $id_ukm,
+            '__message' => 'UKM tidak berhasil diperbarui, ID UKM tidak ditemukan',
+            '__func' => 'UKM update',
+        ], 500);
+    }
+    
+    public function detail($id_ukm)
+    {
+        // Cek jika ID Ukm yang diberikan merupakan Integer
+        if (!is_int($id_ukm)){
+            return response()->json([
+                'data' => 'ID Ukm: ' . $id_ukm,
+                '__message' => 'UKM tidak berhasil diambil, ID UKM harus berupa Integer',
+                '__func' => 'UKM detail',
+            ], 422);
+        }
+
+        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        if (Ukm::where('id', $id_ukm)->exists()) {
+
+            // Eksekusi pembaruan data ukm
+            $query = Ukm::where('id', $id_ukm)->first();
+    
+            // Jika eksekusi query berhasil maka berikan response success
+            if ($query) {
+                return response()->json([
+                    'data' => $query,
+                    '__message' => 'Detail UKM berhasil diambil',
+                    '__func' => 'UKM detail',
+                ], 200);
+            }
+    
+            // Jika gagal seperti masalah koneksi atau apapun maka berikan response error
+            return response()->json([
+                'data' => $query,
+                '__message' => 'UKM tidak berhasil diambil, coba kembali beberapa saat',
+                '__func' => 'UKM detail',
+            ], 500);
+        }
+
+        // Jika ID tidak tersedia maka tampilkan response error
+        return response()->json([
+            'data' => 'ID Ukm: ' . $id_ukm,
+            '__message' => 'UKM tidak berhasil diambil, ID UKM tidak ditemukan',
+            '__func' => 'UKM detail',
+        ], 500);
+    }
+
+    public function delete($id_ukm)
+    {
+        // Cek jika ID Ukm yang diberikan merupakan Integer
+        if (!is_int($id_ukm)){
+            return response()->json([
+                'data' => 'ID Ukm: ' . $id_ukm,
+                '__message' => 'UKM tidak berhasil dihapus, ID UKM harus berupa Integer',
+                '__func' => 'UKM delete',
+            ], 422);
+        }
+
+        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        if (Ukm::where('id', $id_ukm)->exists()) {
+
+            // Eksekusi penghapusan data ukm
+            $query = Ukm::where('id', $id_ukm)->delete();
+    
+            // Jika eksekusi query berhasil maka berikan response success
+            if ($query) {
+                return response()->json([
+                    'data' => $query,
+                    '__message' => 'UKM berhasil dihapus',
+                    '__func' => 'UKM delete',
+                ], 200);
+            }
+    
+            // Jika gagal seperti masalah koneksi atau apapun maka berikan response error
+            return response()->json([
+                'data' => $query,
+                '__message' => 'UKM tidak berhasil dihapus, coba kembali beberapa saat',
+                '__func' => 'UKM delete',
+            ], 500);
+        }
+
+        // Jika ID tidak tersedia maka tampilkan response error
+        return response()->json([
+            'data' => 'ID Ukm: ' . $id_ukm,
+            '__message' => 'UKM tidak berhasil dihapus, ID UKM tidak ditemukan',
+            '__func' => 'UKM delete',
+        ], 500);
     }
 }

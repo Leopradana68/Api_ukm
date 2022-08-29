@@ -13,4 +13,4 @@ use App\Http\Controllers\ukmController;
 |
 */
 
-Route::get('/', [ukmController::class, 'index']);
+// Route::get('/', [ukmController::class, 'index']);

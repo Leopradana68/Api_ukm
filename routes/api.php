@@ -1,12 +1,12 @@
 <?php
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ukmController;
 use App\Http\Controllers\artikelController;
 use App\Http\Controllers\artikelhitController;
 use App\Http\Controllers\artikelkategoriController;
 use App\Http\Controllers\dokumenController;
+use App\Http\Controllers\UkmController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,11 +17,20 @@ use App\Http\Controllers\dokumenController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/ukm', [ukmController::class, 'index']);
-Route::post('/ukm', [ukmController::class, 'store']);
-Route::get('/ukm/{id}', [ukmController::class, 'show']);
-Route::post('/ukm/{id}', [ukmController::class, 'update']);
-Route::delete('/ukm/{id}', [ukmController::class, 'delete']);
+
+Route::prefix('ukm')->group(function () {
+    Route::get('/list', [UkmController::class, 'list']); // Daftar UKM
+    Route::get('/detail/{id_ukm}', [UkmController::class, 'detail']); // Detail Data UKM
+    Route::patch('/{id_ukm}', [UkmController::class, 'update']); // Memperbarui UKM
+    Route::post('/{id_ukm}', [UkmController::class, 'create']); // Membuat data UKM baru
+    Route::delete('/{id_ukm}', [UkmController::class, 'delete']); // Menghapus data UKM
+});
+
+// Route::get('/ukm', [ukmController::class, 'index']);
+// Route::post('/ukm', [ukmController::class, 'store']);
+// Route::get('/ukm/{id}', [ukmController::class, 'show']);
+// Route::post('/ukm/{id}', [ukmController::class, 'update']);
+// Route::delete('/ukm/{id}', [ukmController::class, 'delete']);
 
 Route::get('/artikel', [artikelController::class, 'index']);
 // Route::get('/artikel{id}', [artikelController::class, 'show']);
