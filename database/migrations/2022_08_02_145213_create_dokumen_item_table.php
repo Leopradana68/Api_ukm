@@ -15,15 +15,11 @@ class CreateDokumenItemTable extends Migration
     {
         Schema::create('dokumen_item', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_users');
             $table->unsignedBigInteger('id_dokumen');
-            $table->bigInteger('file_size');
-            $table->string('file_name');
-            $table->binary('file_data');
+            $table->text('dokumen');
 
             $table->timestamps();
 
-            $table->foreign('id_users')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('id_dokumen')->references('id')->on('dokumen')->onDelete('cascade')->onUpdate('cascade');
         });
     }

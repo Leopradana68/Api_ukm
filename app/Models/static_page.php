@@ -10,7 +10,6 @@ class static_page extends Model
     protected $table = 'static_page';
 	
 	protected $fillable = [
-        'id_users',
         'id_ukm',
         'title', 
         'intro', 

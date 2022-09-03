@@ -14,24 +14,21 @@ class CreateNewsTable extends Migration
     public function up()
     {
         Schema::create('news', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->unsignedBigInteger('id_users');
+            $table->id();
+            // $table->unsignedBigInteger('id_users');
             $table->unsignedBigInteger('id_ukm');
             $table->unsignedBigInteger('id_news_kategori');
             $table->string('title', 100);
             $table->string('intro', 100);
-            $table->text(' content');
-            $table->binary('image_file_data');
-            $table->bigInteger('image_file_size');
-            $table->string('image_file_name', 100);
+            $table->text('content');
+            $table->text('foto_news');
             $table->bigInteger('total_hit');
             $table->timestamps();
 
             
-            $table->foreign('id_users')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreign('id_users')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('id_ukm')->references('id')->on('ukm')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_news_kategori')->references('id')->on('news_kategori')->onDelete('cascade')->onUpdate('cascade');
-      
+            $table->foreign('id_news_kategori')->references('id')->on('news_kategori')->onDelete('cascade')->onUpdate('cascade');  
         });
     }
 

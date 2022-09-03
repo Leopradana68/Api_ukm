@@ -10,7 +10,7 @@ class video_galleri extends Model
     protected $table = 'video_galleri';
 	
 	protected $fillable = [
-        'id_users',
+      
         'id_ukm',
         'nama',
         'description'

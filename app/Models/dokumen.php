@@ -10,7 +10,6 @@ class dokumen extends Model
     protected $table = 'dokumen';
 	
 	protected $fillable = [
-        'id_users',
         'id_ukm',
         'nama',
         'description'

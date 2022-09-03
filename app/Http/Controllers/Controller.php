@@ -19,4 +19,13 @@ class Controller extends BaseController
         $file->move($tujuan_upload, $nama_file);
         return '/assets/images/data/'.$nama_file;
     }
+
+    public function uploadDokumen($value)
+    {
+        $file = $value;
+        $nama_dokumen = preg_replace('/\s+/', '', time()."_".$file->getClientOriginalName());
+        $tujuan_upload = public_path('/assets/Dokumen/data');
+        $file->move($tujuan_upload, $nama_dokumen);
+        return '/assets/Dokumen/data/'.$nama_dokumen;
+    }
 }

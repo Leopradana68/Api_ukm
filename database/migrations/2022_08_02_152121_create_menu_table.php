@@ -21,7 +21,7 @@ class CreateMenuTable extends Migration
             $table->unsignedBigInteger('id_artikel_kategori');
             $table->unsignedBigInteger('id_image_galleri');
             $table->unsignedBigInteger('id_video_galleri');
-            $table->string('id_static_page');
+            $table->unsignedBigInteger('id_static_page');
 
 
             $table->string('url'); 

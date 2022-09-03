@@ -15,14 +15,15 @@ class CreateVideoGalleriTable extends Migration
     {
         Schema::create('video_galleri', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_users');
+                
             $table->unsignedBigInteger('id_ukm');
             $table->string('nama');
             $table->string('description');
             $table->timestamps();
 
-            $table->foreign('id_users')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+    
             $table->foreign('id_ukm')->references('id')->on('ukm')->onDelete('cascade')->onUpdate('cascade');
+       
         });
     }
 

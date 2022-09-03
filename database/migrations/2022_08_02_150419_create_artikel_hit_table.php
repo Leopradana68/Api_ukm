@@ -15,7 +15,7 @@ class CreateArtikelHitTable extends Migration
     {
         Schema::create('artikel_hit', function (Blueprint $table) {
             $table->id();
-            $table->string('id_artikel');   
+            $table->unsignedBigInteger('id_artikel');   
             $table->string('ip');
             $table->string('device');
             $table->timestamps();

@@ -15,13 +15,12 @@ class CreateNewsHitTable extends Migration
     {
         Schema::create('news_hit', function (Blueprint $table) {
             $table->id();
-            $table->string('id_news');   
+            $table->unsignedBigInteger('id_news');   
             $table->string('ip');
             $table->string('device');
             $table->timestamps();
 
-            $table->foreign('id_news')->references('id')->on('news')->onDelete('cascade')->onUpdate('cascade');
-        });
+            $table->foreign('id_news')->references('id')->on('news')->onDelete('cascade')->onUpdate('cascade');   });
     }
 
     /**

@@ -10,15 +10,12 @@ class news extends Model
     protected $table = 'news';
 	
 	protected $fillable = [
-        'id_users',
         'id_ukm',
         'id_news_kategori',
         'title', 
         'intro', 
         'content',
-        'image_file_data',
-        'image_file_size',
-        'image_file_name',
+        'foto_news',
         'total_hit'
     ];
 
