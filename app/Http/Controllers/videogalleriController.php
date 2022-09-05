@@ -6,6 +6,23 @@ use App\Models\video_galleri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel video galleri
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel video galleri. Dapat diakses dalam
+| router grup "/videogalleri".
+|
+| - LIST - Menampilkan daftar video galleri
+| - DETAIL - Menampilkan detail data video galleri
+| - CREATE - Membuat data video galleri baru
+| - UPDATE - Memperbarui data video galleri
+| - DELETE - Menghapus data video galleri
+|
+*/
+
 class videogalleriController extends Controller
 {/*
     |--------------------------------------------------------------------------
@@ -14,7 +31,7 @@ class videogalleriController extends Controller
     */
     public function list()
     {
-        // Jika tabel artikel gak ada isi maka 
+        // Jika tabel video galleri gak ada isi maka 
         if (video_galleri::count() > 0) {
             $data =video_galleri::get();
 
@@ -57,7 +74,7 @@ class videogalleriController extends Controller
 
     
 
-        // Eksekusi pembuatan data artikel_kategori
+        // Eksekusi pembuatan data video galleri
         $query = video_galleri::create([
             'id_ukm' => $request->id_ukm,
             'nama' => $request->nama,
@@ -106,7 +123,7 @@ class videogalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan merupakan Integer
+        // Cek jika ID video galleri yang diberikan merupakan Integer
         if (!is_numeric($id_video_galleri)){
             return response()->json([
                 'data' => 'ID Video Galleri: ' . $id_video_galleri,
@@ -115,12 +132,12 @@ class videogalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID video galleri yang diberikan apakah tersedia di tabel
         if (video_galleri::where('id', $id_video_galleri)->exists()) {
 
           {
 
-                 // Eksekusi pembaruan data Dokumen
+                 // Eksekusi pembaruan data video galleri
                  $query = video_galleri::where('id', $id_video_galleri)->update([
                     'id_ukm' => $request->id_ukm,
                     'nama' => $request->nama,
@@ -161,7 +178,7 @@ class videogalleriController extends Controller
     */
     public function detail($id_video_galleri)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID video galleri yang diberikan merupakan Integer
         if (!is_numeric($id_video_galleri)){
             return response()->json([
                 'data' => 'ID video Galleri: ' . $id_video_galleri,
@@ -170,10 +187,10 @@ class videogalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID video galleri yang diberikan apakah tersedia di tabel
         if (video_galleri::where('id', $id_video_galleri)->exists()) {
 
-            // Eksekusi pembaruan data kategori
+            // Eksekusi pembaruan data video galleri
             $query = video_galleri::where('id', $id_video_galleri)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -208,7 +225,7 @@ class videogalleriController extends Controller
     */
     public function delete($id_video_galleri)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID video galleri yang diberikan merupakan Integer
         if (!is_numeric($id_video_galleri)){
             return response()->json([
                 'data' => 'ID video Galleri: ' . $id_video_galleri,
@@ -217,10 +234,10 @@ class videogalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID video galleri yang diberikan apakah tersedia di tabel
         if (video_galleri::where('id', $id_video_galleri)->exists()) {
 
-            // Eksekusi penghapusan data Kategori
+            // Eksekusi penghapusan data video galleri
             $query = video_galleri::where('id', $id_video_galleri)->delete();
     
             // Jika eksekusi query berhasil maka berikan response success

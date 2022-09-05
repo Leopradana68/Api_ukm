@@ -6,6 +6,23 @@ use App\Models\image_item_galleri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel image_item_galleri
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel image_item_galleri. Dapat diakses dalam
+| router grup "/imageitemgalleri".
+|
+| - LIST - Menampilkan daftar image_item_galleri
+| - DETAIL - Menampilkan detail data image_item_galleri
+| - CREATE - Membuat data image_item_galleri baru
+| - UPDATE - Memperbarui data image_item_galleri
+| - DELETE - Menghapus data image_item_galleri
+|
+*/
+
 class imageitemgalleriController extends Controller
 {
     
@@ -16,7 +33,7 @@ class imageitemgalleriController extends Controller
     */
     public function list()
     {
-        // Jika tabel artikel gak ada isi maka 
+        // Jika tabel image_item_galleri gak ada isi maka 
         if (image_item_galleri::count() > 0) {
             $data = image_item_galleri::get();
 
@@ -57,7 +74,7 @@ class imageitemgalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika variabel "$request->foto_ukm" merupakan sebuah file
+        // Cek jika variabel "$request->foto" merupakan sebuah file
         if ($request->hasFile('foto')) {
 
             // Upload file gambar kedalam folder public dan kembalikan nama file 
@@ -65,7 +82,7 @@ class imageitemgalleriController extends Controller
 
         }
 
-        // Eksekusi pembuatan data ukm
+        // Eksekusi pembuatan data image_item_galleri
         $query = image_item_galleri::create([
             
             // 'id_users' => $request->id_users,
@@ -115,7 +132,7 @@ class imageitemgalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID image_item_galleri yang diberikan merupakan Integer
         if (!is_numeric($id_image)){
             return response()->json([
                 'data' => 'ID Image: ' . $id_image,
@@ -124,16 +141,16 @@ class imageitemgalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID image_item_galleri yang diberikan apakah tersedia di tabel
         if (image_item_galleri::where('id', $id_image)->exists()) {
 
-            // Cek jika variabel "$request->foto_artikel" merupakan sebuah file
+            // Cek jika variabel "$request->foto" merupakan sebuah file
             if ($request->hasFile('foto')) {
 
                 // Upload file gambar kedalam folder public dan kembalikan nama file 
                 $nama_file = $this->uploadFile($request->foto);
 
-                // Eksekusi pembaruan data ukm
+                // Eksekusi pembaruan data image_item_galleri
                 $query = image_item_galleri::where('id', $id_image)->update([
                     'id_galleri' =>  $request->id_galleri,
                     'description' =>  $request->description,
@@ -141,7 +158,7 @@ class imageitemgalleriController extends Controller
                 ]);
             } else {
 
-                 // Eksekusi pembaruan data artikel tanpa "foto"
+                 // Eksekusi pembaruan data image_item_galleri tanpa "foto"
                  $query = image_item_galleri::where('id', $id_image)->update([
                     'id_galleri' =>  $request->id_galleri,
                     'description' =>  $request->description,
@@ -180,7 +197,7 @@ class imageitemgalleriController extends Controller
     */
     public function detail($id_image)
     {
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID image_item_galleri yang diberikan merupakan Integer
         if (!is_numeric($id_image)){
             return response()->json([
                 'data' => 'ID Image: ' . $id_image,
@@ -189,10 +206,10 @@ class imageitemgalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID image_item_galleri yang diberikan apakah tersedia di tabel
         if (image_item_galleri::where('id', $id_image)->exists()) {
 
-            // Eksekusi pembaruan data ukm
+            // Eksekusi pembaruan data image_item_galleri
             $query =image_item_galleri::where('id', $id_image)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -227,7 +244,7 @@ class imageitemgalleriController extends Controller
     */
     public function delete($id_image)
     {
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID image_item_galleri yang diberikan merupakan Integer
         if (!is_numeric($id_image)){
             return response()->json([
                 'data' => 'ID Image: ' . $id_image,
@@ -236,10 +253,10 @@ class imageitemgalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID image_item_galleri yang diberikan apakah tersedia di tabel
         if (image_item_galleri::where('id', $id_image)->exists()) {
 
-            // Eksekusi penghapusan data ukm
+            // Eksekusi penghapusan data image_item_galleri
             $query = image_item_galleri::where('id', $id_image)->delete();
     
             // Jika eksekusi query berhasil maka berikan response success

@@ -131,7 +131,7 @@ class artikelkategoriController extends Controller
 
           {
 
-                 // Eksekusi pembaruan data ukm tanpa "foto ketua"
+                 // Eksekusi pembaruan data artikel kategori
                  $query = artikel_kategori::where('id', $id_kategori)->update([
                     'nama_kategori' => $request->nama_kategori,
                   

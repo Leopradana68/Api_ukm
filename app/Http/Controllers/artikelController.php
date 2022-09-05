@@ -6,6 +6,24 @@ use App\Models\artikel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel Artikel
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel artikel. Dapat diakses dalam
+| router grup "/artikel".
+|
+| - LIST - Menampilkan daftar artikel
+| - DETAIL - Menampilkan detail data artikel
+| - CREATE - Membuat data artikel baru
+| - UPDATE - Memperbarui data artikel
+| - DELETE - Menghapus data artikel
+|
+*/
+
+
 class artikelController extends Controller
 {
     /*
@@ -61,7 +79,7 @@ class artikelController extends Controller
             ], 422);
         }
 
-        // Cek jika variabel "$request->foto_ukm" merupakan sebuah file
+        // Cek jika variabel "$request->foto_artikel" merupakan sebuah file
         if ($request->hasFile('foto_artikel')) {
 
             // Upload file gambar kedalam folder public dan kembalikan nama file 
@@ -69,7 +87,7 @@ class artikelController extends Controller
 
         }
 
-        // Eksekusi pembuatan data ukm
+        // Eksekusi pembuatan data artikel
         $query = artikel::create([
             
             // 'id_users' => $request->id_users,
@@ -128,7 +146,7 @@ class artikelController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID artikel yang diberikan merupakan Integer
         if (!is_numeric($id_artikel)){
             return response()->json([
                 'data' => 'ID artikel: ' . $id_artikel,
@@ -137,7 +155,7 @@ class artikelController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID artikel yang diberikan apakah tersedia di tabel
         if (artikel::where('id', $id_artikel)->exists()) {
 
             // Cek jika variabel "$request->foto_artikel" merupakan sebuah file
@@ -146,7 +164,7 @@ class artikelController extends Controller
                 // Upload file gambar kedalam folder public dan kembalikan nama file 
                 $nama_file = $this->uploadFile($request->foto_artikel);
 
-                // Eksekusi pembaruan data ukm
+                // Eksekusi pembaruan data artikel
                 $query = artikel::where('id', $id_artikel)->update([
                     'id_ukm' =>  $request->id_ukm,
                     'id_artikel_kategori' =>  $request->id_artikel_kategori,
@@ -201,7 +219,7 @@ class artikelController extends Controller
     */
     public function detail($id_artikel)
     {
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID artikel yang diberikan merupakan Integer
         if (!is_numeric($id_artikel)){
             return response()->json([
                 'data' => 'ID Artikel: ' . $id_artikel,
@@ -210,10 +228,10 @@ class artikelController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID artikel yang diberikan apakah tersedia di tabel
         if (artikel::where('id', $id_artikel)->exists()) {
 
-            // Eksekusi pembaruan data ukm
+            // Eksekusi pembaruan data artikel
             $query = artikel::where('id', $id_artikel)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -248,7 +266,7 @@ class artikelController extends Controller
     */
     public function delete($id_artikel)
     {
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID artikel yang diberikan merupakan Integer
         if (!is_numeric($id_artikel)){
             return response()->json([
                 'data' => 'ID Artikel: ' . $id_artikel,
@@ -257,10 +275,10 @@ class artikelController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID artikel yang diberikan apakah tersedia di tabel
         if (artikel::where('id', $id_artikel)->exists()) {
 
-            // Eksekusi penghapusan data ukm
+            // Eksekusi penghapusan data artikel
             $query = artikel::where('id', $id_artikel)->delete();
     
             // Jika eksekusi query berhasil maka berikan response success

@@ -6,6 +6,22 @@ use App\Models\static_page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel static_page
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel static_page. Dapat diakses dalam
+| router grup "/staticpage".
+|
+| - LIST - Menampilkan daftar static_page
+| - DETAIL - Menampilkan detail data static_page
+| - CREATE - Membuat data static_page baru
+| - UPDATE - Memperbarui data static_page
+| - DELETE - Menghapus data static_page
+|
+*/
+
 class staticpageController extends Controller
 {/*
     |--------------------------------------------------------------------------
@@ -14,7 +30,7 @@ class staticpageController extends Controller
     */
     public function list()
     {
-        // Jika tabel Artikel_kategori gak ada isi maka 
+        // Jika tabel static_page gak ada isi maka 
         if (static_page::count() > 0) {
             $data = static_page::get();
 
@@ -58,7 +74,7 @@ class staticpageController extends Controller
 
     
 
-        // Eksekusi pembuatan data artikel_kategori
+        // Eksekusi pembuatan data static_page
         $query = static_page::create([
             'id_ukm' => $request->id_ukm,
             'title' =>  $request->title,
@@ -107,7 +123,7 @@ class staticpageController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan merupakan Integer
+        // Cek jika ID static_page yang diberikan merupakan Integer
         if (!is_numeric($id_static_page)){
             return response()->json([
                 'data' => 'ID Static Page: ' . $id_static_page,
@@ -116,12 +132,12 @@ class staticpageController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID static_page yang diberikan apakah tersedia di tabel
         if (static_page::where('id', $id_static_page)->exists()) {
 
           {
 
-                 // Eksekusi pembaruan data ukm tanpa "foto ketua"
+                 // Eksekusi pembaruan data static_page
                  $query = static_page::where('id', $id_static_page)->update([
                     'id_ukm' => $request->id_ukm,
                     'title' =>  $request->title,
@@ -162,7 +178,7 @@ class staticpageController extends Controller
     */
     public function detail($id_static_page)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID static_page yang diberikan merupakan Integer
         if (!is_numeric($id_static_page)){
             return response()->json([
                 'data' => 'ID Static Page: ' . $id_static_page,
@@ -171,10 +187,10 @@ class staticpageController extends Controller
             ], 422);
         }
 
-        // Cek jika ID kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID static_page yang diberikan apakah tersedia di tabel
         if (static_page::where('id', $id_static_page)->exists()) {
 
-            // Eksekusi pembaruan data kategori
+            // Eksekusi pembaruan data static_page
             $query = static_page::where('id', $id_static_page)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -209,7 +225,7 @@ class staticpageController extends Controller
     */
     public function delete($id_static_page)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID static_page yang diberikan merupakan Integer
         if (!is_numeric($id_static_page)){
             return response()->json([
                 'data' => 'ID Static Page: ' . $id_static_page,
@@ -218,10 +234,10 @@ class staticpageController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID static_page yang diberikan apakah tersedia di tabel
         if (static_page::where('id', $id_static_page)->exists()) {
 
-            // Eksekusi penghapusan data Kategori
+            // Eksekusi penghapusan data static_page
             $query = static_page::where('id', $id_static_page)->delete();
     
             // Jika eksekusi query berhasil maka berikan response success

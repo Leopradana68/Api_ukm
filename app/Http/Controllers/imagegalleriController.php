@@ -6,6 +6,22 @@ use App\Models\image_galleri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel Image galleri
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel Image galleri. Dapat diakses dalam
+| router grup "/Imagegalleri".
+|
+| - LIST - Menampilkan daftar Image galleri
+| - DETAIL - Menampilkan detail data Image galleri
+| - CREATE - Membuat data Image galleri baru
+| - UPDATE - Memperbarui data Image galleri
+| - DELETE - Menghapus data Image galleri
+|
+*/
+
 class imagegalleriController extends Controller
 {/*
     |--------------------------------------------------------------------------
@@ -14,7 +30,7 @@ class imagegalleriController extends Controller
     */
     public function list()
     {
-        // Jika tabel artikel gak ada isi maka 
+        // Jika tabel Image galleri gak ada isi maka 
         if (image_galleri::count() > 0) {
             $data =image_galleri::get();
 
@@ -57,7 +73,7 @@ class imagegalleriController extends Controller
 
     
 
-        // Eksekusi pembuatan data artikel_kategori
+        // Eksekusi pembuatan data Image galleri
         $query = image_galleri::create([
             'id_ukm' => $request->id_ukm,
             'nama' => $request->nama,
@@ -106,7 +122,7 @@ class imagegalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan merupakan Integer
+        // Cek jika ID Image galleri yang diberikan merupakan Integer
         if (!is_numeric($id_image_galleri)){
             return response()->json([
                 'data' => 'ID Image Galleri: ' . $id_image_galleri,
@@ -115,12 +131,12 @@ class imagegalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID Image galleri yang diberikan apakah tersedia di tabel
         if (image_galleri::where('id', $id_image_galleri)->exists()) {
 
           {
 
-                 // Eksekusi pembaruan data Dokumen
+                 // Eksekusi pembaruan data Image galleri
                  $query = image_galleri::where('id', $id_image_galleri)->update([
                     'id_ukm' => $request->id_ukm,
                     'nama' => $request->nama,
@@ -161,7 +177,7 @@ class imagegalleriController extends Controller
     */
     public function detail($id_image_galleri)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID Image galleri yang diberikan merupakan Integer
         if (!is_numeric($id_image_galleri)){
             return response()->json([
                 'data' => 'ID image Galleri: ' . $id_image_galleri,
@@ -170,10 +186,10 @@ class imagegalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID Image galleri yang diberikan apakah tersedia di tabel
         if (image_galleri::where('id', $id_image_galleri)->exists()) {
 
-            // Eksekusi pembaruan data kategori
+            // Eksekusi pembaruan data Image galleri
             $query = image_galleri::where('id', $id_image_galleri)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -208,7 +224,7 @@ class imagegalleriController extends Controller
     */
     public function delete($id_image_galleri)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID Image galleri yang diberikan merupakan Integer
         if (!is_numeric($id_image_galleri)){
             return response()->json([
                 'data' => 'ID Image Galleri: ' . $id_image_galleri,
@@ -217,10 +233,10 @@ class imagegalleriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID Image galleri yang diberikan apakah tersedia di tabel
         if (image_galleri::where('id', $id_image_galleri)->exists()) {
 
-            // Eksekusi penghapusan data Kategori
+            // Eksekusi penghapusan data Image galleri
             $query = image_galleri::where('id', $id_image_galleri)->delete();
     
             // Jika eksekusi query berhasil maka berikan response success

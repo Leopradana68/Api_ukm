@@ -7,6 +7,22 @@ use App\Models\dokumen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel Dokumen
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel artikel. Dapat diakses dalam
+| router grup "/artikel".
+|
+| - LIST - Menampilkan daftar Dokumen
+| - DETAIL - Menampilkan detail data Dokumen
+| - CREATE - Membuat data Dokumen baru
+| - UPDATE - Memperbarui data Dokumen
+| - DELETE - Menghapus data Dokumen
+|
+*/
+
 class dokumenController extends Controller
 {/*
     |--------------------------------------------------------------------------
@@ -15,7 +31,7 @@ class dokumenController extends Controller
     */
     public function list()
     {
-        // Jika tabel artikel gak ada isi maka 
+        // Jika tabel Dokumen gak ada isi maka 
         if (dokumen::count() > 0) {
             $data =dokumen::get();
 
@@ -58,7 +74,7 @@ class dokumenController extends Controller
 
     
 
-        // Eksekusi pembuatan data artikel_kategori
+        // Eksekusi pembuatan data Dokumen
         $query = dokumen::create([
             'id_ukm' => $request->id_ukm,
             'nama' => $request->nama,
@@ -107,7 +123,7 @@ class dokumenController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan merupakan Integer
+        // Cek jika ID Dokumen yang diberikan merupakan Integer
         if (!is_numeric($id_dokumen)){
             return response()->json([
                 'data' => 'ID Dokumen: ' . $id_dokumen,
@@ -116,7 +132,7 @@ class dokumenController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID Dokumen yang diberikan apakah tersedia di tabel
         if (dokumen::where('id', $id_dokumen)->exists()) {
 
           {
@@ -162,7 +178,7 @@ class dokumenController extends Controller
     */
     public function detail($id_dokumen)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID Dokumen yang diberikan merupakan Integer
         if (!is_numeric($id_dokumen)){
             return response()->json([
                 'data' => 'ID Dokumen: ' . $id_dokumen,
@@ -171,10 +187,10 @@ class dokumenController extends Controller
             ], 422);
         }
 
-        // Cek jika ID kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID Dokumen yang diberikan apakah tersedia di tabel
         if (dokumen::where('id', $id_dokumen)->exists()) {
 
-            // Eksekusi pembaruan data kategori
+            // Eksekusi pembaruan data Dokumen
             $query = dokumen::where('id', $id_dokumen)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -209,7 +225,7 @@ class dokumenController extends Controller
     */
     public function delete($id_dokumen)
     {
-        // Cek jika ID Kategori yang diberikan merupakan Integer
+        // Cek jika ID Dokumen yang diberikan merupakan Integer
         if (!is_numeric($id_dokumen)){
             return response()->json([
                 'data' => 'ID Kategori: ' . $id_dokumen,
@@ -218,7 +234,7 @@ class dokumenController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID Dokumen yang diberikan apakah tersedia di tabel
         if (dokumen::where('id', $id_dokumen)->exists()) {
 
             // Eksekusi penghapusan data Kategori

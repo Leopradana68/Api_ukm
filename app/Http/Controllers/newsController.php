@@ -6,6 +6,22 @@ use App\Models\news;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel News
+|--------------------------------------------------------------------------
+|
+| artikelController digunakan untuk mengelola tabel artikel. Dapat diakses dalam
+| router grup "/artikel".
+|
+| - LIST - Menampilkan daftar News
+| - DETAIL - Menampilkan detail data News
+| - CREATE - Membuat data News baru
+| - UPDATE - Memperbarui data News
+| - DELETE - Menghapus data News
+|
+*/
+
 class newsController extends Controller
 {
     /*
@@ -15,7 +31,7 @@ class newsController extends Controller
     */
     public function list()
     {
-        // Jika tabel artikel gak ada isi maka 
+        // Jika tabel News gak ada isi maka 
         if (news::count() > 0) {
             $data = news::get();
 
@@ -61,7 +77,7 @@ class newsController extends Controller
             ], 422);
         }
 
-        // Cek jika variabel "$request->foto_ukm" merupakan sebuah file
+        // Cek jika variabel "$request->foto_news" merupakan sebuah file
         if ($request->hasFile('foto_news')) {
 
             // Upload file gambar kedalam folder public dan kembalikan nama file 
@@ -69,7 +85,7 @@ class newsController extends Controller
 
         }
 
-        // Eksekusi pembuatan data ukm
+        // Eksekusi pembuatan data News
         $query = news::create([
             
             // 'id_users' => $request->id_users,
@@ -128,7 +144,7 @@ class newsController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID News yang diberikan merupakan Integer
         if (!is_numeric($id_news)){
             return response()->json([
                 'data' => 'ID News: ' . $id_news,
@@ -137,16 +153,16 @@ class newsController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID News yang diberikan apakah tersedia di tabel
         if (news::where('id', $id_news)->exists()) {
 
-            // Cek jika variabel "$request->foto_artikel" merupakan sebuah file
+            // Cek jika variabel "$request->foto_News" merupakan sebuah file
             if ($request->hasFile('foto_news')) {
 
                 // Upload file gambar kedalam folder public dan kembalikan nama file 
                 $nama_file = $this->uploadFile($request->foto_news);
 
-                // Eksekusi pembaruan data ukm
+                // Eksekusi pembaruan data News
                 $query = news::where('id', $id_news)->update([
                     'id_ukm' =>  $request->id_ukm,
                     'id_news_kategori' =>  $request->id_news_kategori,
@@ -158,7 +174,7 @@ class newsController extends Controller
                 ]);
             } else {
 
-                 // Eksekusi pembaruan data artikel tanpa "foto artikel"
+                 // Eksekusi pembaruan data News tanpa "foto News"
                  $query = news::where('id', $id_news)->update([
                     'id_ukm' =>  $request->id_ukm,
                     'id_news_kategori' =>  $request->id_news_kategori,
@@ -201,7 +217,7 @@ class newsController extends Controller
     */
     public function detail($id_news)
     {
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID News yang diberikan merupakan Integer
         if (!is_numeric($id_news)){
             return response()->json([
                 'data' => 'ID News: ' . $id_news,
@@ -210,10 +226,10 @@ class newsController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID News yang diberikan apakah tersedia di tabel
         if (news::where('id', $id_news)->exists()) {
 
-            // Eksekusi pembaruan data ukm
+            // Eksekusi pembaruan data News
             $query = news::where('id', $id_news)->first();
     
             // Jika eksekusi query berhasil maka berikan response success
@@ -248,7 +264,7 @@ class newsController extends Controller
     */
     public function delete($id_news)
     {
-        // Cek jika ID Ukm yang diberikan merupakan Integer
+        // Cek jika ID News yang diberikan merupakan Integer
         if (!is_numeric($id_news)){
             return response()->json([
                 'data' => 'ID News: ' . $id_news,
@@ -257,10 +273,10 @@ class newsController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Ukm yang diberikan apakah tersedia di tabel
+        // Cek jika ID News yang diberikan apakah tersedia di tabel
         if (news::where('id', $id_news)->exists()) {
 
-            // Eksekusi penghapusan data ukm
+            // Eksekusi penghapusan data News
             $query = news::where('id', $id_news)->delete();
     
             // Jika eksekusi query berhasil maka berikan response success

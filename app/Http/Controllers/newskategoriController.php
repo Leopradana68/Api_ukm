@@ -5,6 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\news_kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+/*
+|--------------------------------------------------------------------------
+| CRUD Tabel News kategori
+|--------------------------------------------------------------------------
+|
+| ArtikelkategoriController digunakan untuk mengelola tabel news_kategori. Dapat diakses dalam
+| router grup "/newskategori".
+|
+| - LIST - Menampilkan daftar news_kategori
+| - DETAIL - Menampilkan detail data news_kategori
+| - CREATE - Membuat data news_kategori baru
+| - UPDATE - Memperbarui data news_kategori
+| - DELETE - Menghapus data news_kategori
+|
+*/
 
 class newskategoriController extends Controller
 {
@@ -15,7 +30,7 @@ class newskategoriController extends Controller
     */
     public function list()
     {
-        // Jika tabel Artikel_kategori gak ada isi maka 
+        // Jika tabel news_kategori gak ada isi maka 
         if (news_kategori::count() > 0) {
             $data = news_kategori::get();
 
@@ -57,7 +72,7 @@ class newskategoriController extends Controller
 
     
 
-        // Eksekusi pembuatan data artikel_kategori
+        // Eksekusi pembuatan data news_kategori
         $query = news_kategori::create([
             'id_ukm' => $request->id_ukm,
             'nama_kategori' => $request->nama_kategori,
@@ -102,7 +117,7 @@ class newskategoriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan merupakan Integer
+        // Cek jika ID news_kategori  yang diberikan merupakan Integer
         if (!is_numeric($id_kategori)){
             return response()->json([
                 'data' => 'ID Kategori: ' . $id_kategori,
@@ -111,7 +126,7 @@ class newskategoriController extends Controller
             ], 422);
         }
 
-        // Cek jika ID Artikel_kategori yang diberikan apakah tersedia di tabel
+        // Cek jika ID news_kategori yang diberikan apakah tersedia di tabel
         if (news_kategori::where('id', $id_kategori)->exists()) {
 
           {
