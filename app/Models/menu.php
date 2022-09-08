@@ -7,16 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class menu extends Model
 {
+    use HasFactory;
+
+    public function parent() 
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children() 
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    
+  
     protected $table = 'menu';
 	
+
 	protected $fillable = [
         'nama',
-        'id_ukm',
-       'id_news_kategori',
-       'id_artikel_kategori',
-       'id_image_galleri',
-       'id_video_galleri',
-       'id_static_page',
         'url', 
         'parent_id',
         'hint'

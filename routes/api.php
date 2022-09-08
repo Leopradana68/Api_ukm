@@ -15,6 +15,7 @@ use App\Http\Controllers\videogalleriController;
 use App\Http\Controllers\videoitemgalleriController;
 use App\Http\Controllers\staticpageController;
 use App\Http\Controllers\UkmController;
+use App\Http\Controllers\menuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +145,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::patch('/{id_static_page}', [staticpageController::class, 'update']); // Memperbarui staticpage
         Route::post('/{id_static_page}', [staticpageController::class, 'create']); // Membuat data staticpage baru
         Route::delete('/{id_static_page}', [staticpageController::class, 'delete']); // Menghapus data staticpage
+    });
+
+    Route::prefix('menu')->group(function () {
+     
+        Route::post('/{id_menu}', [menuController::class, 'create']); // Membuat data menu baru
+        Route::get('/allmenu', [menuController::class, 'allmenu']);
+      
+        
     });
     
 });
