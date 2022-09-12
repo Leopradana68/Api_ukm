@@ -148,8 +148,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     Route::prefix('menu')->group(function () {
-     
+        Route::get('/', [menuController::class, 'list']); // Daftar menu
+        Route::get('/{id_menu}', [menuController::class, 'detail']); // Detail Data menu
+        Route::patch('/{id_menu}', [menuController::class, 'update']); // Memperbarui menu
         Route::post('/{id_menu}', [menuController::class, 'create']); // Membuat data menu baru
+        Route::delete('/{id_menu}', [menuController::class, 'delete']); // Menghapus data staticpage
         Route::get('/allmenu', [menuController::class, 'allmenu']);
       
         
