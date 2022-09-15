@@ -1,0 +1,86 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Dokumentasi API",
+        "description": "API UKM Politeknik Negeri Lampung",
+        "contact": {
+            "email": "leopradana013gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/Ukm": {
+            "get": {
+                "tags": [
+                    ";ist"
+                ],
+                "summary": " ga tau",
+                "description": "list Ukm",
+                "operationId": " ",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama": {
+                                        "type": "string"
+                                    },
+                                    "jenis": {
+                                        "type": "string"
+                                    },
+                                    "singkatan_ukm": {
+                                        "type": "string"
+                                    },
+                                    "foto_ukm": {
+                                        "type": "text"
+                                    },
+                                    "keterangan": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "nama": "Pers Sukma",
+                                    "jenis": "ukm",
+                                    "singkatan_ukm": "sukma",
+                                    "foto_ukm": " ap/ap/ap",
+                                    "keterangan": "ini ukm"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "body": {
+                                        "nama": "Pers Sukma",
+                                        "jenis": "ukm",
+                                        "singkatan_ukm": "sukma",
+                                        "foto_ukm": " ap/ap/ap",
+                                        "keterangan": "ini ukm",
+                                        "id": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

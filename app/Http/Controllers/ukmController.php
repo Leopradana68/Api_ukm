@@ -23,7 +23,62 @@ use Illuminate\Support\Facades\Validator;
 */
 
 class UkmController extends Controller
-{
+{ /**
+    *    @OA\Get(
+    *       path="/Ukm",
+    *       tags={";ist"},
+    *       operationId=" ",
+    *       summary=" ga tau",
+    *       description="list Ukm",
+    *     @OA\RequestBody(
+    *         @OA\MediaType(
+    *             mediaType="application/json",
+    *             @OA\Schema(
+    *                 @OA\Property(
+    *                     property="nama",
+    *                     type="string"
+    *                 ),
+        *                 @OA\Property(
+    *                     property="jenis",
+    *                     type="string"
+    *                 ),
+        *                 @OA\Property(
+    *                     property="singkatan_ukm",
+    *                     type="string"
+    *                 ),
+         *                 @OA\Property(
+    *                     property="foto_ukm",
+    *                     type="text"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="keterangan",
+    *                     type="string"
+    *                 ),
+    *                 example={"nama": "Pers Sukma", "jenis": "ukm" , "singkatan_ukm": "sukma", "foto_ukm": " ap/ap/ap", "keterangan": "ini ukm"}
+    *             )
+    *         )
+    *     ),
+    *       @OA\Response(
+    *           response="200",
+    *           description="Ok",
+    *           @OA\JsonContent
+    *           (example={
+    *               "body": {
+    *                    "nama": "Pers Sukma",
+    *                    "jenis": "ukm",
+    *                    "singkatan_ukm": "sukma",
+     *                   "foto_ukm": " ap/ap/ap",
+     *                   "singkatan_ukm": "sukma",
+     *                   "keterangan": "ini ukm",
+    *                    "id": 1,
+    *                }
+    *           }
+    *       )
+    *   )
+    *)
+    */
+
+
     /*
     |--------------------------------------------------------------------------
     | LIST
@@ -48,6 +103,10 @@ class UkmController extends Controller
             '__func' => 'UKM List',
         ], 200);
     }
+
+
+     
+
 
     /*
     |--------------------------------------------------------------------------

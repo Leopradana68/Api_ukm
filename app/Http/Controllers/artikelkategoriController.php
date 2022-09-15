@@ -32,7 +32,10 @@ class artikelkategoriController extends Controller
     {
         // Jika tabel Artikel_kategori gak ada isi maka 
         if (artikel_kategori::count() > 0) {
+          
             $data = artikel_kategori::get();
+
+        // if   $query = artikel_kategori::where('id_ukm', $request->id_ukm)->get();
 
             return response()->json([
                 'data' => $data,
